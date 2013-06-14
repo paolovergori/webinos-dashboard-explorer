@@ -1,15 +1,16 @@
 function refresh(){
-    console.log("<Webinos explorer> refreshing");
+    console.log("<Webinos explorer> refreshing");       
+    logWebinos();
+    
     $('#explorerView').empty();    
-    $('#status').html("STATUS: ");
+    $('#status').html('STATUS:  ');
     if(webinos.session.isConnected()){        
-        console.log(webinos.session);
         $('#status').append(webinos.session.getPZPId() + ' is connected to ' + webinos.session.getPZHId());
-        fillConnectedDevices();
+        fillConnectedDevices();        
     }
-    else{
+    else{ //virgin mode only
         $('#status').append(webinos.session.getPZPId() + ' is not connected');
-        $('#explorerView').append("<li id='" + webinos.session.getConnectedDevices()[0] + "'><span>"+ webinos.session.getConnectedDevices()[0] +"</span></li>");
+        $('#explorerView').append("<li id='" + webinos.session.getConnectedDevices()[0].id + "'><span>"+ webinos.session.getConnectedDevices()[0].friendlyName +"</span></li>");
         fillServices();
     }
 }
@@ -17,22 +18,24 @@ function refresh(){
 
 function fillConnectedDevices(){    
     for(var i=0;i<webinos.session.getConnectedDevices().length;i++){
-        $('#explorerView').append("<li><span>"+ webinos.session.getConnectedDevices()[i].id +"</span></li>");
+        $('#explorerView').append('<li id="'+ webinos.session.getConnectedDevices()[i].id + '"><span>' + webinos.session.getConnectedDevices()[i].friendlyName + '</span></li>');
+        
         for(var j=0;j<webinos.session.getConnectedDevices()[i].pzp.length;j++)
-            $('#explorerView').append("<ul><li id='"+ webinos.session.getConnectedDevices()[i].pzp[j] +"'><span>"+ webinos.session.getConnectedDevices()[i].pzp[j] +"</span></li>");
-        $('#explorerView').append("</ul>");
+            $('#explorerView').append('<ul><li id="' + webinos.session.getConnectedDevices()[i].pzp[j].id +'"><span>' + webinos.session.getConnectedDevices()[i].pzp[j].friendlyName +'</span></li>');
+        $('#explorerView').append('</ul>');
     }
     fillServices();
 }
 
 
 function fillServices(){
-    console.log("Webinos explorer: calling service discovery");
-//     webinos.discovery.findServices(new ServiceType('http://www.w3.org/ns/api-perms/geolocation'), {        
-//     webinos.discovery.findServices(new ServiceType('http://webinos.org/api/test'), {        
+    console.log("webinos explorer: calling service discovery");
     webinos.discovery.findServices(new ServiceType('*'), {        
         onFound: function(service){
-            $("[id='" + service.serviceAddress + "']").append("<ul><li><span>" + service.displayName + "</span></ul>");
+            console.log("***************");
+            console.log(service.serviceAddress);
+            console.log("***************");
+            $("[id='" + service.serviceAddress + "']").append("<ol><li><span>" + service.displayName + "</span></ol>");
         }
     });
 }
@@ -43,3 +46,43 @@ $(document).ready(function(){
     webinos.session.addListener('registeredBrowser', refresh);
 });
 
+
+function logWebinos(){
+    console.log("-------------------------------------");
+    console.log('webinos.session.getSessionId()');
+    console.log(webinos.session.getSessionId());
+    console.log("---");
+    console.log('webinos.session.getConnectedPzh()');
+    console.log(webinos.session.getConnectedPzh());
+    console.log("---");
+    console.log('webinos.session.getConnectedPzp()');
+    console.log(webinos.session.getConnectedPzp());
+    console.log("---");
+    console.log('webinos.session.getConnectedDevices()');
+    console.log(webinos.session.getConnectedDevices());
+    console.log("---");
+    console.log('webinos.session.getPZPId()');
+    console.log(webinos.session.getPZPId());
+    console.log("---");
+    console.log('webinos.session.getPZHId()');
+    console.log(webinos.session.getPZHId());
+    console.log("---");
+    console.log('webinos.session.getFriendlyName()');
+    console.log(webinos.session.getFriendlyName());
+    console.log("---");
+    console.log('webinos.session.isConnected()');
+    console.log(webinos.session.isConnected());
+    console.log("---");
+    console.log('webinos.session.getSessionId()');
+    console.log(webinos.session.getSessionId());
+    console.log("---");
+    console.log('webinos.session.getWebinosVersion()');
+    console.log(webinos.session.getWebinosVersion());
+    console.log("---");
+    console.log('webinos.session.getServiceLocation()');
+    console.log(webinos.session.getServiceLocation());
+    console.log("---");
+    console.log('webinos.session');
+    console.log(webinos.session);
+    console.log("-------------------------------------");
+} 
