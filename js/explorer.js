@@ -10,7 +10,7 @@ function refresh(){
     }
     else{ //virgin mode only
         $('#status').append(webinos.session.getPZPId() + ' is not connected');
-        $('#explorerView').append('<li id="' + webinos.session.getConnectedDevices()[0].id + '"><span>'+ webinos.session.getConnectedDevices()[0].friendlyName +'</span></li><ol id="' + webinos.session.getConnectedDevices()[0].id + '/services' + '"></ol>');
+        $('#explorerView').append('<li id="' + webinos.session.getConnectedDevices()[0].id + '"><span>'+ webinos.session.getConnectedDevices()[0].friendlyName +'</span></li><ol id="' + webinos.session.getConnectedDevices()[0].id + '/services' + '" style="list-style: none;"></ol>');
         fillServices();
     }
 }
@@ -18,10 +18,10 @@ function refresh(){
 
 function fillConnectedDevices(){    
     for(var i=0;i<webinos.session.getConnectedDevices().length;i++){
-        $('#explorerView').append('<li id="'+ webinos.session.getConnectedDevices()[i].id + '"><span>' + webinos.session.getConnectedDevices()[i].friendlyName + '</span></li><ol id="' + webinos.session.getConnectedDevices()[i].id + '/services' + '"></ol>');
+        $('#explorerView').append('<li id="'+ webinos.session.getConnectedDevices()[i].id + '"><span>' + webinos.session.getConnectedDevices()[i].friendlyName + '</span></li><ol id="' + webinos.session.getConnectedDevices()[i].id + '/services' + '" style="list-style: none;"></ol>');
         
         for(var j=0;j<webinos.session.getConnectedDevices()[i].pzp.length;j++)
-            $('#explorerView').append('<ul><li id="' + webinos.session.getConnectedDevices()[i].pzp[j].id +'"><span>' + webinos.session.getConnectedDevices()[i].pzp[j].friendlyName +'</span></li><ol id="' + webinos.session.getConnectedDevices()[i].pzp[j].id + '/services' + '"></ol>');
+            $('#explorerView').append('<ul><li id="' + webinos.session.getConnectedDevices()[i].pzp[j].id +'"><span>' + webinos.session.getConnectedDevices()[i].pzp[j].friendlyName +'</span></li><ol id="' + webinos.session.getConnectedDevices()[i].pzp[j].id + '/services' + '" style="list-style: none;"></ol>');
         $('#explorerView').append('</ul>');
     }
     fillServices();
@@ -35,7 +35,15 @@ function fillServices(){
             console.log("***************");
             console.log(service.serviceAddress);
             console.log("***************");
-            $('[id="' + service.serviceAddress + '/services' + '"]').append('<li><span>' + service.displayName + '</span></li>');
+            $('[id="' + service.serviceAddress + '/services' + '"]').append('<li><button id="'+ service.serviceAddress + '/' + service.displayName +'">' + service.displayName + '</button></li>');
+            $('[id="' + service.serviceAddress + '/' + service.displayName +'"]').data("service", service);
+            $('[id="' + service.serviceAddress + '/' + service.displayName +'"]').bind('click', function(){
+                service.bindService({
+                    onBind: function(service){
+                        $('[id="' + service.serviceAddress + '/' + service.displayName +'"]').css('background-color','lime');;
+                    }
+                });
+            });
         }
     });
 }
