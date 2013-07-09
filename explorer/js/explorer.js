@@ -1,5 +1,5 @@
-function selectService(address, api){
-    webinos.dashboard.actionComplete({address:address, api:api}, function(){window.close();});
+function selectService(api, address, id){
+    webinos.dashboard.actionComplete({api:api, address:address, id:id}, function(){window.close();});
 }
 
 function refresh(){
@@ -65,8 +65,8 @@ function fillServices(){
             console.log("***************");
             var srvHtml = "";
             srvHtml+="<li class='service'>";
-            if (params!=null) srvHtml+="<a onclick='selectService(\""+service.serviceAddress+"\",\""+service.api+"\")' href='#'>";
-            srvHtml+="<span>" + service.displayName + "</span>";
+            if (params!=null) srvHtml+="<a onclick='selectService(\""+service.api+"\", \""+service.serviceAddress+"\", \""+service.id+"\")' href='#'>";
+            srvHtml+="<span>" + service.displayName + "</span><br/><span style='font-size: 0.8em'>(" + service.description + ")</span>";
             if (params!=null) srvHtml+="</a>";
             srvHtml+="</li>";
             $("[id='" + service.serviceAddress + "']").append(srvHtml);
